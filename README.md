@@ -2,4 +2,4 @@
 
 ## Explore  Laravel
 
-- DTO in Laravel
+- DTO ( Data transfer object ) in Laravel
