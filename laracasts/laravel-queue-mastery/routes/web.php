@@ -18,9 +18,11 @@ Route::get('/', function () {
     //\App\Jobs\SendWelcomeEmail::dispatch()->delay(5); // 5 seconds delay
     //\App\Jobs\SendWelcomeEmail::dispatch();
 
-    foreach (range(1, 100) as $i) {
+    foreach (range(1, 2) as $i) {
         \App\Jobs\SendWelcomeEmail::dispatch();
     }
+
+    \App\Jobs\ProcessPayment::dispatch()->onQueue('payments'); //higher priority
 
     return view('welcome');
 });
