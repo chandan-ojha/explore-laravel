@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     //(new \App\Jobs\SendWelcomeEmail())->handle();
-    \App\Jobs\SendWelcomeEmail::dispatch();
+    //\App\Jobs\SendWelcomeEmail::dispatch()->delay(5); // 5 seconds delay
+    //\App\Jobs\SendWelcomeEmail::dispatch();
+
+    foreach (range(1, 100) as $i) {
+        \App\Jobs\SendWelcomeEmail::dispatch();
+    }
+
     return view('welcome');
 });
