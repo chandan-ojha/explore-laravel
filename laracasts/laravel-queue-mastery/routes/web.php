@@ -22,10 +22,26 @@ Route::get('/', function () {
         \App\Jobs\SendWelcomeEmail::dispatch();
     }*/
 
-    \App\Jobs\SendEmail::dispatch();
+    //\App\Jobs\SendEmail::dispatch();
 
     //\App\Jobs\ProcessPayment::dispatch()->onQueue('payments'); //higher priority
 
+    /*$chain = [
+        new App\Jobs\PullRepo(),
+        new App\Jobs\RunTests(),
+        new App\Jobs\Deploy()
+    ];*/
+
+    $batch = [
+        new App\Jobs\PullRepo("Project 1"),
+        new App\Jobs\PullRepo("Project 2"),
+        new App\Jobs\PullRepo("Project 3"),
+    ];
+
+    //Illuminate\Support\Facades\Bus::chain($chain)->dispatch();
+    Illuminate\Support\Facades\Bus::batch($batch)
+        ->allowFailures()
+        ->dispatch();
 
     return view('welcome');
 });
