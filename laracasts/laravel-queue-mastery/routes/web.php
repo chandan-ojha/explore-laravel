@@ -32,16 +32,49 @@ Route::get('/', function () {
         new App\Jobs\Deploy()
     ];*/
 
-    $batch = [
+    /*$batch = [
         new App\Jobs\PullRepo("Project 1"),
         new App\Jobs\PullRepo("Project 2"),
         new App\Jobs\PullRepo("Project 3"),
-    ];
+    ];*/
+
+    /*$batch = [
+        [
+            new App\Jobs\PullRepo("Project 1"),
+            new App\Jobs\RunTests("Project 1"),
+            new App\Jobs\Deploy("Project 1")
+        ],
+        [
+            new App\Jobs\PullRepo("Project 2"),
+            new App\Jobs\RunTests("Project 2"),
+            new App\Jobs\Deploy("Project 2")
+        ]
+    ];*/
 
     //Illuminate\Support\Facades\Bus::chain($chain)->dispatch();
-    Illuminate\Support\Facades\Bus::batch($batch)
+    /*Illuminate\Support\Facades\Bus::batch($batch)
         ->allowFailures()
-        ->dispatch();
+        ->catch(function ($batch, $e) {
+            //
+        })
+        ->then(function ($batch) {
+
+        })
+        ->finally(function ($batch) {
+            //
+        })
+        ->dispatch();*/
+
+    /*Illuminate\Support\Facades\Bus::batch($batch)
+        ->allowFailures()
+        ->dispatch();*/
+
+    /*Illuminate\Support\Facades\Bus::chain([
+        new App\Jobs\Deploy(),
+        function () {
+            Illuminate\Support\Facades\Bus::batch([...])->dispatch();
+        }
+    ])->dispatch();*/
 
     return view('welcome');
 });
