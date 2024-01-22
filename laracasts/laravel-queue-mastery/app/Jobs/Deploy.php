@@ -3,9 +3,12 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\Middleware\ThrottlesExceptions;
 use Illuminate\Queue\Middleware\WithoutOverlapping;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
@@ -54,10 +57,21 @@ class Deploy implements ShouldQueue
         sleep(5);
         info("End Deploying");
     }
+
+    /*public function uniqueId()
+    {
+        return 'deployments';
+    }
+    public function uniqueFor()
+    {
+      return 60;
+    }*/
+
     public function middleware()
     {
         return [
-            new WithoutOverlapping('deployments',10)
+            //new WithoutOverlapping('deployments',10)
+            new ThrottlesExceptions(10)
         ];
     }
 }
