@@ -76,5 +76,7 @@ Route::get('/', function () {
         }
     ])->dispatch();*/
 
+    \App\Jobs\Deploy::dispatch();
+
     return view('welcome');
 });
