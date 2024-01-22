@@ -76,7 +76,14 @@ Route::get('/', function () {
         }
     ])->dispatch();*/
 
-    \App\Jobs\Deploy::dispatch();
+    //\App\Jobs\Deploy::dispatch();
+
+    /*\Illuminate\Support\Facades\DB::transaction(function (){
+        $user =  \App\Models\User::create([...]);
+        \App\Jobs\SendWelcomeEmail::dispatch($user)->afterCommit();
+    });*/
+
+    \App\Jobs\TestJob::dispatch('THIS_IS_THE_SECRET');
 
     return view('welcome');
 });
