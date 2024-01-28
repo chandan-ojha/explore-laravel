@@ -11,88 +11,114 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
-class AttendeeResource extends Resource {
+class AttendeeResource extends Resource
+{
     protected static ?string $model = Attendee::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    //protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $navigationGroup = 'First Group';
+    protected static ?string $recordTitleAttribute = 'name';
 
-    public static function form( Form $form ): Form {
+    public static function getNavigationBadge(): ?string
+    {
+        return Attendee::count();
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Conference' => $record->conference->name,
+        ];
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'success';
+    }
+
+    public static function form(Form $form): Form
+    {
         return $form
-            ->schema( [
-                Forms\Components\TextInput::make( 'name' )
+            ->schema([
+                Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength( 255 ),
-                Forms\Components\TextInput::make( 'email' )
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
-                    ->maxLength( 255 ),
-                Forms\Components\TextInput::make( 'ticket_cost' )
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('ticket_cost')
                     ->required()
                     ->numeric(),
-                Forms\Components\Toggle::make( 'is_paid' )
+                Forms\Components\Toggle::make('is_paid')
                     ->required(),
-                Forms\Components\Select::make( 'conference_id' )
-                    ->relationship( 'conference', 'name' )
+                Forms\Components\Select::make('conference_id')
+                    ->relationship('conference', 'name')
                     ->required(),
-            ] );
+            ]);
     }
 
-    public static function table( Table $table ): Table {
+    public static function table(Table $table): Table
+    {
         return $table
-            ->columns( [
-                Tables\Columns\TextColumn::make( 'name' )
+            ->columns([
+                Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make( 'email' )
+                Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make( 'ticket_cost' )
+                Tables\Columns\TextColumn::make('ticket_cost')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\IconColumn::make( 'is_paid' )
+                Tables\Columns\IconColumn::make('is_paid')
                     ->boolean(),
-                Tables\Columns\TextColumn::make( 'conference.name' )
+                Tables\Columns\TextColumn::make('conference.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make( 'created_at' )
+                Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable( isToggledHiddenByDefault: true ),
-                Tables\Columns\TextColumn::make( 'updated_at' )
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable( isToggledHiddenByDefault: true ),
-            ] )
-            ->filters( [
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
                 //
-            ] )
-            ->actions( [
+            ])
+            ->actions([
                 Tables\Actions\EditAction::make(),
-            ] )
-            ->bulkActions( [
-                Tables\Actions\BulkActionGroup::make( [
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ] ),
-            ] );
+                ]),
+            ]);
     }
 
-    public static function getRelations(): array {
+    public static function getRelations(): array
+    {
         return [
             //
         ];
     }
 
-    public static function getWidgets(): array {
+    public static function getWidgets(): array
+    {
         return [
             AttendeesStatsWidget::class,
             AttendeeChartWidget::class,
         ];
     }
 
-    public static function getPages(): array {
+    public static function getPages(): array
+    {
         return [
-            'index'  => Pages\ListAttendees::route( '/' ),
-            'create' => Pages\CreateAttendee::route( '/create' ),
-            'edit'   => Pages\EditAttendee::route( '/{record}/edit' ),
+            'index' => Pages\ListAttendees::route('/'),
+            'create' => Pages\CreateAttendee::route('/create'),
+            'edit' => Pages\EditAttendee::route('/{record}/edit'),
         ];
     }
 }
