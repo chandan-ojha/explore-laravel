@@ -1,5 +1,5 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-        Hello Fillament PHP !
+        <p> Hello Fillament PHP ! </p>
     </x-filament::section>
 </x-filament-widgets::widget>
