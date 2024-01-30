@@ -74,6 +74,9 @@ class VaccinationResource extends Resource
                     ->color(function ($state) {
                         return $state->getColor();
                     }),
+                Tables\Columns\TextColumn::make('notification_sent_at')
+                    ->dateTime()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
