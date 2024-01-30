@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\Center;
+use App\Models\Vaccination;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -16,7 +18,7 @@ class VaccinationScheduleMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public string $name, public string $center)
+    public function __construct(public Vaccination $user, public Center $center)
     {
         //
     }
@@ -38,6 +40,10 @@ class VaccinationScheduleMail extends Mailable
     {
         return new Content(
             view: 'mails.vaccination-schedule-mail',
+            with: [
+                'user' => $this->user,
+                'center' => $this->center->name,
+            ],
         );
     }
 

@@ -20,7 +20,7 @@ class NotifyUser implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public Vaccination $vaccination, public Center $center)
+    public function __construct(public Vaccination $user, public Center $center)
     {
         //
     }
@@ -30,14 +30,14 @@ class NotifyUser implements ShouldQueue
      */
     public function handle(): void
     {
-        Vaccination::where('email', $this->vaccination->email)
+        Vaccination::where('email', $this->user->email)
             ->update([
                 'status' => VaccinationStatus::SCHEDULED,
                 'notification_sent_at' => now(),
             ]);
 
-        $mail = new VaccinationScheduleMail($this->vaccination->name, $this->center);
+        $mail = new VaccinationScheduleMail($this->user->name, $this->center);
 
-        Mail::to($this->vaccination->email)->send($mail);
+        Mail::to($this->user->email)->send($mail);
     }
 }
