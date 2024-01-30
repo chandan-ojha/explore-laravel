@@ -52,6 +52,10 @@ class VaccinationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->persistFiltersInSession()
+            ->filtersTriggerAction(function ($action) {
+                return $action->button()->label('Filters');
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
@@ -62,6 +66,7 @@ class VaccinationResource extends Resource
                 Tables\Columns\TextColumn::make('phone')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('center.name')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
@@ -79,7 +84,23 @@ class VaccinationResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(VaccinationStatus::class)
+                    ->default(VaccinationStatus::NOT_VACCINATED)
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\SelectFilter::make('center')
+                    ->relationship('center', 'name')
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\Filter::make('has_status')
+                    ->label('Show Only Vaccinated Patients')
+                    ->toggle()
+                    ->query(function ($query) {
+                        $query->where('status', VaccinationStatus::VACCINATED);
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -118,7 +139,15 @@ class VaccinationResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
+            ])
+            ->headerActions([
+                Tables\Actions\Action::make('export')
+                    ->tooltip('This will export all records visible in the table. Adjust filters to export a subset of records.')
+                    ->action(function ($livewire) {
+                        dd('Exporting...', $livewire);
+                    }),
             ]);
     }
 
@@ -134,7 +163,7 @@ class VaccinationResource extends Resource
         return [
             'index' => Pages\ListVaccinations::route('/'),
             'create' => Pages\CreateVaccination::route('/create'),
-            'edit' => Pages\EditVaccination::route('/{record}/edit'),
+            //'edit' => Pages\EditVaccination::route('/{record}/edit'),
         ];
     }
 }
