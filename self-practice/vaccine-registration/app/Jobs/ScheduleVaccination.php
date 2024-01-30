@@ -18,7 +18,7 @@ class ScheduleVaccination implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public Vaccination $vaccination)
+    public function __construct()
     {
         //
     }
