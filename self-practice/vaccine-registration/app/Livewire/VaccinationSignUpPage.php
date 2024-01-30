@@ -5,8 +5,10 @@ namespace App\Livewire;
 use App\Models\Vaccination;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class VaccinationSignUpPage extends Component implements HasForms
@@ -63,10 +65,22 @@ class VaccinationSignUpPage extends Component implements HasForms
 
     public function create(): void
     {
-        dd($this->form->getState());
+        $data = $this->form->getState();
+        $record = Vaccination::create($data);
+
+        $this->form->model($record)->saveRelationships();
+
+        Notification::make()
+            ->success()
+            ->title('Success!')
+            ->body('We will notify you the availability of vaccine.')
+            ->seconds(5)
+            ->send();
+
+        $this->form->fill();
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.vaccination-sign-up-page');
     }

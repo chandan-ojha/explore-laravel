@@ -11,7 +11,7 @@
 </head>
 
 <body class="flex items-center justify-center min-h-screen flex-col font-sans gap-2">
-<h1 class="text-2xl text-slate-600 font-semibold">Welcome to {{ config('app.name') }}</h1>
+<h1 class="text-2xl text-slate-600 font-semibold">Welcome to Vaccination Program</h1>
 <p class="text-md text-stone-500 font-semibold">A Vaccine Registration Application.</p>
 <a role="button" href="{{ route('sign-up') }}"
    class="text-md px-5 py-1 border-2 rounded-lg border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-white transition-all">
