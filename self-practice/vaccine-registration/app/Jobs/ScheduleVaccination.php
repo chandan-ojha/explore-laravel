@@ -10,7 +10,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Mail;
 
 class ScheduleVaccination implements ShouldQueue
 {
@@ -19,7 +18,7 @@ class ScheduleVaccination implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct(public Vaccination $vaccination)
     {
         //
     }
@@ -42,18 +41,9 @@ class ScheduleVaccination implements ShouldQueue
                 ->get();
 
             foreach ($notVaccinatedUsers as $user) {
-                $email = $user->email;
                 $vaccineCenter = $user->center->name;
 
-                Vaccination::where('email', $email)
-                    ->update([
-                        'status' => VaccinationStatus::SCHEDULED,
-                        'notification_sent_at' => now(),
-                    ]);
-
-                $mail = new VaccinationScheduleMail($user->name, $vaccineCenter);
-
-                Mail::to($email)->send($mail);
+                NotifyUser::dispatch($user, $vaccineCenter);
             }
         }
     }
