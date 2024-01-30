@@ -18,6 +18,7 @@ class Vaccination extends Model
         'phone',
         'status',
         'center_id',
+        'notification_sent_at',
     ];
 
     protected $casts = [

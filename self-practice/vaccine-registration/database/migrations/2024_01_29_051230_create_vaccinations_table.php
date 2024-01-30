@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('phone', 11)->unique();
             $table->string('status')->default(VaccinationStatus::NOT_VACCINATED);
             $table->foreignId('center_id')->constrained('centers')->cascadeOnDelete();
+            $table->timestamp('notification_sent_at')->nullable();
             $table->timestamps();
         });
     }
