@@ -9,5 +9,8 @@
                 <strong>{{ $job['title'] }}:</strong> Pays {{$job['salary']}} per year.
             </a>
         @endforeach
+        <div>
+            {{ $jobs->links() }}
+        </div>
     </div>
 </x-layout>
