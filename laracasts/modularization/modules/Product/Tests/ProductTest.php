@@ -10,8 +10,8 @@ class ProductTest extends TestCase
     public function test_it_creates_a_product(): void
     {
         $product = Product::factory()->create();
+
         $this->assertNotEmpty($product->name);
-        //dd($product);
     }
 
 }
