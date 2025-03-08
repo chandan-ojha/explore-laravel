@@ -1,9 +1,7 @@
 <?php
-
 namespace App\Http\Requests\Api\V1;
 
 use App\Permissions\V1\Abilities;
-use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTicketRequest extends BaseTicketRequest
 {
@@ -23,25 +21,18 @@ class StoreTicketRequest extends BaseTicketRequest
     public function rules(): array
     {
         $authorIdAttr = $this->routeIs('tickets.store') ? 'data.relationships.author.data.id' : 'author';
+        $user         = $this->user();
+        $authorRule   = 'required|integer|exists:users,id';
 
         $rules = [
-            'data.attributes.title' => 'required|string',
+            'data.attributes.title'       => 'required|string',
             'data.attributes.description' => 'required|string',
-            'data.attributes.status' => 'required|string|in:A,C,H,X',
-            'data.relationships.author.data.id' => 'required|integer|exists:users,id'
+            'data.attributes.status'      => 'required|string|in:A,C,H,X',
+            $authorIdAttr                 => $authorRule . '|size:' . $user->id,
         ];
 
-        $rules = [
-            'data.attributes.title' => 'required|string',
-            'data.attributes.description' => 'required|string',
-            'data.attributes.status' => 'required|string|in:A,C,H,X',
-            $authorIdAttr => 'required|integer|exists:users,id'
-        ];
-
-        $user = $this->user();
-
-        if ($user->tokenCan(Abilities::CreateOwnTicket)) {
-            $rules[$authorIdAttr] .= '|size:' . $user->id;
+        if ($user->tokenCan(Abilities::CreateTicket)) {
+            $rules[$authorIdAttr] = $authorRule;
         }
 
         return $rules;
@@ -51,7 +42,7 @@ class StoreTicketRequest extends BaseTicketRequest
     {
         if ($this->routeIs('authors.tickets.store')) {
             $this->merge([
-                'author' => $this->route('author')
+                'author' => $this->route('author'),
             ]);
         }
     }
