@@ -1,17 +1,17 @@
 <?php
-
 namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 class BaseUserRequest extends FormRequest
 {
-    public function mappedAttributes(array $otherAttributes = []) {
+    public function mappedAttributes(array $otherAttributes = [])
+    {
         $attributeMap = array_merge([
-            'data.attributes.name' => 'name',
-            'data.attributes.email' => 'email',
+            'data.attributes.name'      => 'name',
+            'data.attributes.email'     => 'email',
             'data.attributes.isManager' => 'is_manager',
-            'data.attributes.password' => 'password',
+            'data.attributes.password'  => 'password',
         ], $otherAttributes);
 
         $attributesToUpdate = [];
